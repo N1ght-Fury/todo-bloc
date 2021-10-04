@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:todo_bloc/logic/cubit/user_cubit.dart';
+import 'logic/cubit/user_cubit.dart';
 
 import 'data/services/api.dart';
 import 'logic/utility/app_bloc_observer.dart';
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext myAppContext) {
+  Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserCubit>(
@@ -47,14 +47,18 @@ class MyApp extends StatelessWidget {
           /* lazy: false, */
         ),
       ],
-      child: MaterialApp(
-        title: 'Todo App',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
-        initialRoute: isLoggedIn ? '/' : '/login',
-        onGenerateRoute: appRouter.onGenerateRoute,
+      child: Builder(
+        builder: (context) {
+          return MaterialApp(
+            title: 'Todo App',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            initialRoute: context.read<UserCubit>().state is UserLoggedIn ? '/todos' : '/login',
+            onGenerateRoute: appRouter.onGenerateRoute,
+          );
+        }
       ),
     );
   }
