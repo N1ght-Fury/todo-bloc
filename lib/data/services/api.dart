@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_bloc/data/model/models.dart';
-import 'package:todo_bloc/logic/cubit/user_cubit.dart';
+import '../model/user_models.dart';
+import '../model/todo_models.dart';
+import '../../logic/cubit/user_cubit.dart';
 
 class Api {
   var dio = Dio();
@@ -14,7 +15,6 @@ class Api {
 
     try {
       var response = await dio.get('https://jsonplaceholder.typicode.com/users/$id');
-      print(response);
       user = User.fromJson(response.toString());
     } catch (e) {
       success = false;
@@ -28,7 +28,7 @@ class Api {
     Response? response;
 
     try {
-      response = await dio.get('https://jsonplaceholder.typicode.com/posts?userId=$userId');
+      response = await dio.get('https://jsonplaceholder.typicode.com/todos?userId=$userId');
     } catch (e) {
       success = false;
     }
