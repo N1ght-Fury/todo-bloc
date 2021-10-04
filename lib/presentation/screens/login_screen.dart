@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:provider/src/provider.dart';
 
-import 'package:todo_bloc/logic/cubit/user_cubit.dart';
+import '../../logic/cubit/user_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen();
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
@@ -18,19 +18,19 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: BlocConsumer<UserCubit, UserState>(
-        listener: (userCubitListenerContext, state) {
+        listener: (context, state) {
           if (state is UserLoggedIn) {
-            Navigator.pushNamedAndRemoveUntil(context, '/', (Route<dynamic> route) => false);
+            Navigator.pushNamedAndRemoveUntil(context, '/todos', (Route<dynamic> route) => false);
           } else if (state is UserFailedToLogin) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Failed to log in!'),
+                content: Text('Failed to log in'),
                 duration: Duration(milliseconds: 3000),
               ),
             );
           }
         },
-        builder: (counterCubiBuilderContext, state) {
+        builder: (context, state) {
           return LoadingOverlay(
             isLoading: context.watch<UserCubit>().state is UserProcessing,
             opacity: 0.5,
