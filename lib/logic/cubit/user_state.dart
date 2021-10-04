@@ -2,16 +2,14 @@ part of 'user_cubit.dart';
 
 @immutable
 abstract class UserState {
-  final User? user;
-
-  const UserState({
-    this.user,
-  });
+  const UserState();
 }
 
 class UserInitial extends UserState {}
 
 class UserProcessing extends UserState {}
+
+class UserFailedToLogin extends UserState {}
 
 class UserLoggedIn extends UserState {
   final User? loggedInUser;
@@ -28,7 +26,5 @@ class UserLoggedIn extends UserState {
 
   factory UserLoggedIn.fromJson(String source) => UserLoggedIn.fromMap(json.decode(source));
 
-  String toJson() => user!.toJson();
+  String toJson() => loggedInUser!.toJson();
 }
-
-class UserFailedToLogin extends UserState {}
