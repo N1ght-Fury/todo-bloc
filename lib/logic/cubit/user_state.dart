@@ -5,7 +5,9 @@ abstract class UserState {
   const UserState();
 }
 
-class UserInitial extends UserState {}
+class UserInitial extends UserState {
+  /* Map<String, dynamic>? toMap() => {}; */
+}
 
 class UserProcessing extends UserState {}
 
@@ -26,5 +28,5 @@ class UserLoggedIn extends UserState {
 
   factory UserLoggedIn.fromJson(String source) => UserLoggedIn.fromMap(json.decode(source));
 
-  String toJson() => loggedInUser!.toJson();
+  Map<String, dynamic>? toMap() => loggedInUser!.toMap();
 }
