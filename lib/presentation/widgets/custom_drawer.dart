@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 
 import '../../logic/cubit/user_cubit.dart';
 import '../dialogs/yes_no_dialog.dart';
@@ -9,7 +10,8 @@ class CustomDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<UserCubit, UserState>(
       listener: (context, state) {
-        print('here');
+        Logger().log(Level.warning, 'USER STATE CHANGED: ${state.toString()}');
+
         if (state is UserInitial) {
           Navigator.pushNamedAndRemoveUntil(context, '/login', (Route<dynamic> route) => false);
         }
@@ -37,7 +39,7 @@ class CustomDrawer extends StatelessWidget {
               Container(
                 color: Colors.transparent,
                 child: Text(
-                  (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.nameSurname.length.toString(),
+                  (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.nameSurname.toString(),
                 ),
               ),
               SizedBox(
@@ -78,7 +80,6 @@ class CustomDrawer extends StatelessWidget {
                                 'Log out',
                               ),
                               onTap: () async {
-                                Navigator.pop(context);
                                 var result = await showDialog(
                                   context: context,
                                   builder: (BuildContext context) => YesNoDialog(
