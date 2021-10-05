@@ -57,6 +57,6 @@ class UserCubit extends Cubit<UserState> with HydratedMixin {
       return state.toMap();
     }
     Logger().log(Level.info, 'Setting user info to null!');
-    return UserInitial().toMap();
+    return {};
   }
 }
