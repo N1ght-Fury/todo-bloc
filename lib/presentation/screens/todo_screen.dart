@@ -14,35 +14,26 @@ class TodoScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<TodoScreen> {
   @override
-  Widget build(BuildContext homeScreenContext) {
+  Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => TodoCubit(userState: context.read<UserCubit>().state),
       child: Scaffold(
-        drawer: Builder(
-          builder: (context) {
-            return CustomDrawer();
-          }
-        ),
+        drawer: CustomDrawer(),
         appBar: AppBar(
           title: const Text('My Todos'),
           actions: [
             IconButton(icon: Icon(Icons.settings), onPressed: () => Navigator.pushNamed(context, '/settings')),
           ],
         ),
-        body: BlocConsumer<TodoCubit, TodoState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.email.toString(),
-                  ),
-                ],
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.email.toString(),
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
     );
