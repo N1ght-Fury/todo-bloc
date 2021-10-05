@@ -14,7 +14,7 @@ class User {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'nameSurname': nameSurname,
+      'name': nameSurname,
       'email': email,
     };
   }
@@ -32,7 +32,7 @@ class User {
   factory User.fromJson(String source) => User.fromMap(json.decode(source));
 
   @override
-  String toString() => 'User(id: $id, nameSurname: $nameSurname, email: $email)';
+  String toString() => 'User(id: $id, name: $nameSurname, email: $email)';
 }
 
 class SignInUserResult {
