@@ -33,12 +33,11 @@ class Todo {
 
   String toJson() => json.encode(toMap());
 
-  factory Todo.fromJson(String source) => Todo.fromMap(json.decode(source));
+  factory Todo.fromJson(Map<String, dynamic> source) => Todo.fromMap(source);
 
   @override
   String toString() => 'Todo(id: $id, userId: $userId, title: $title, completed: $completed)';
 }
-
 
 class GetTodosResult {
   List<Todo?>? todos;
@@ -49,8 +48,8 @@ class GetTodosResult {
     required this.success,
   });
 
-  GetTodosResult.fromJson({required Map<String, dynamic> json, required bool success})
-      : todos = (json as List).map((e) => e == null ? null : Todo.fromJson(e)).toList(),
+  GetTodosResult.fromJson({required List<dynamic> json, required bool success})
+      : todos = json.map((e) => e == null ? null : Todo.fromJson(e)).toList(),
         success = success;
 
   Map<String, dynamic> toJson() => {
