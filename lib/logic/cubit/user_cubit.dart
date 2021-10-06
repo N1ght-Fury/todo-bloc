@@ -30,7 +30,7 @@ class UserCubit extends Cubit<UserState> with HydratedMixin {
   }
 
   Future<void> logout() async {
-    await HydratedBloc.storage.clear();
+    /* await HydratedBloc.storage.clear(); */
     emit(UserInitial());
   }
 
