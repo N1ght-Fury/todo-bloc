@@ -1,10 +1,8 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import '../model/user_models.dart';
+
 import '../model/todo_models.dart';
-import '../../logic/cubit/user_cubit.dart';
+import '../model/user_models.dart';
 
 class Api {
   var dio = Dio();
@@ -33,6 +31,6 @@ class Api {
       success = false;
     }
 
-    return GetTodosResult.fromJson(json: json.decode(response.toString()), success: success);
+    return GetTodosResult.fromJson(json: response!.data!, success: success);
   }
 }
