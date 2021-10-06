@@ -80,6 +80,7 @@ class CustomDrawer extends StatelessWidget {
                                 'Log out',
                               ),
                               onTap: () async {
+                                /* Navigator.pop(context); */
                                 var result = await showDialog(
                                   context: context,
                                   builder: (BuildContext context) => YesNoDialog(
