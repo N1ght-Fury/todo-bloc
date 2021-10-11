@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import '../../data/model/todo_models.dart';
+import '../widgets/todo_card.dart';
 
 import '../widgets/custom_drawer.dart';
 import '../../logic/cubit/todo_cubit.dart';
@@ -14,20 +16,64 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<TodoScreen> {
+  List<Todo?>? todos = [];
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => TodoCubit(userState: context.read<UserCubit>().state),
-      child: Scaffold(
-        onDrawerChanged: (bool b) {},
-        drawer: CustomDrawer(),
-        appBar: AppBar(
-          title: const Text('My Todos'),
-          actions: [
-            IconButton(icon: Icon(Icons.add), onPressed: () => Navigator.pushNamed(context, '/addTodo')),
-          ],
-        ),
-        body: BlocConsumer<TodoCubit, TodoState>(
+    return BlocConsumer<TodoCubit, TodoState>(
+      listener: (context, state) {
+        if (state is TodosFailed) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to get todos'),
+              duration: Duration(milliseconds: 3000),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        TodoState todoState = context.watch<TodoCubit>().state;
+
+        if (todoState is TodosSuccess) {
+          todos = todoState.todos;
+        } else if (todoState is AddTodoSuccess) {
+          todos!.add(todoState.todo);
+        }
+
+        print(todoState);
+        print(todos!.length);
+
+        return Scaffold(
+          drawer: CustomDrawer(context),
+          appBar: AppBar(
+            title: const Text('My Todos'),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () => Navigator.pushNamed(context, '/addTodo'),
+              ),
+            ],
+          ),
+          body: LoadingOverlay(
+            isLoading: todoState is TodosLoading,
+            opacity: 0.5,
+            progressIndicator: const CircularProgressIndicator(),
+            child: todoState is! TodosFailed
+                ? ListView.builder(
+                    itemCount: todos!.length,
+                    itemBuilder: (context, index) => TodoCard(
+                      todo: todos![index]!,
+                    ),
+                  )
+                : Container(),
+          ),
+        );
+      },
+    );
+  }
+}
+/* 
+BlocConsumer<TodoCubit, TodoState>(
           listener: (context, state) {
             if (state is TodosFailed) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -40,6 +86,13 @@ class _HomeScreenState extends State<TodoScreen> {
           },
           builder: (context, state) {
             TodoState todoState = context.watch<TodoCubit>().state;
+
+            if (todoState is TodosSuccess) {
+              todos = todoState.todos;
+            } else if (todoState is AddTodoSuccess) {
+              todos!.add(todoState.todo);
+            }
+
             return LoadingOverlay(
               isLoading: todoState is TodosLoading,
               opacity: 0.5,
@@ -47,28 +100,11 @@ class _HomeScreenState extends State<TodoScreen> {
               child: todoState is TodosSuccess
                   ? ListView.builder(
                       itemCount: todoState.todos!.length,
-                      itemBuilder: (context, index) => Container(
-                        height: 100,
-                        child: Card(
-                          child: Container(
-                            padding: EdgeInsets.only(left: 10, top: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(todoState.todos![index]!.id.toString()),
-                                Text(todoState.todos![index]!.title.toString()),
-                                Text(todoState.todos![index]!.completed.toString()),
-                              ],
-                            ),
-                          ),
-                        ),
+                      itemBuilder: (context, index) => TodoCard(
+                        todo: todos![index]!,
                       ),
                     )
                   : Container(),
             );
           },
-        ),
-      ),
-    );
-  }
-}
+        ), */
