@@ -28,4 +28,16 @@ class TodoCubit extends Cubit<TodoState> {
       emit(TodosFailed());
     }
   }
+
+  Future<void> addTodo({required Todo todo}) async {
+    emit(AddTodoLoading());
+
+    CreateTodoResult createTodoResult = await api.createTodo(todo: todo);
+
+    if (createTodoResult.success) {
+      emit(AddTodoSuccess(todo: createTodoResult.todo!));
+    } else {
+      emit(AddTodoFail());
+    }
+  }
 }
