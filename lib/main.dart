@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+import 'logic/cubit/todo_cubit.dart';
 
 import 'data/services/api.dart';
 import 'logic/cubit/user_cubit.dart';
@@ -46,6 +47,10 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<UserCubit>(
           create: (userCubitContext) => UserCubit(api: api),
+          /* lazy: false, */
+        ),
+        BlocProvider<TodoCubit>(
+          create: (context) => TodoCubit(userState: context.read<UserCubit>().state),
           /* lazy: false, */
         ),
       ],
