@@ -13,6 +13,14 @@ class Todo {
     required this.completed,
   });
 
+  Map<String, dynamic> toMapWithoutId() {
+    return {
+      'userId': userId,
+      'title': title,
+      'completed': completed,
+    };
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -54,6 +62,44 @@ class GetTodosResult {
 
   Map<String, dynamic> toJson() => {
         'todos': todos,
+        'success': success,
+      };
+}
+
+class CreateTodoResult {
+  Todo? todo;
+  bool success;
+
+  CreateTodoResult({
+    this.todo,
+    required this.success,
+  });
+
+  CreateTodoResult.fromJson({required Map<String, dynamic> json, required bool success})
+      : todo = Todo.fromJson(json),
+        success = success;
+
+  Map<String, dynamic> toJson() => {
+        'todo': todo,
+        'success': success,
+      };
+}
+
+class UpdateTodoResult {
+  Todo? todo;
+  bool success;
+
+  UpdateTodoResult({
+    this.todo,
+    required this.success,
+  });
+
+  UpdateTodoResult.fromJson({required Map<String, dynamic> json, required bool success})
+      : todo = Todo.fromJson(json),
+        success = success;
+
+  Map<String, dynamic> toJson() => {
+        'todo': todo,
         'success': success,
       };
 }
