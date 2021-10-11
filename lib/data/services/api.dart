@@ -1,4 +1,4 @@
-import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 import '../model/todo_models.dart';
@@ -32,5 +32,43 @@ class Api {
     }
 
     return GetTodosResult.fromJson(json: response!.data!, success: success);
+  }
+
+  Future<CreateTodoResult> createTodo({required Todo todo}) async {
+    bool success = true;
+    Response? response;
+
+    try {
+      response = await dio.post('https://jsonplaceholder.typicode.com/todos', data: todo.toMapWithoutId());
+    } catch (e) {
+      success = false;
+    }
+
+    return CreateTodoResult.fromJson(json: response!.data!, success: success);
+  }
+
+  Future<UpdateTodoResult> updateTodo({required Todo todo}) async {
+    bool success = true;
+    Response? response;
+
+    try {
+      response = await dio.put('https://jsonplaceholder.typicode.com/todos/${todo.id}', data: todo.toMap());
+    } catch (e) {
+      success = false;
+    }
+
+    return UpdateTodoResult.fromJson(json: response!.data!, success: success);
+  }
+
+  Future<bool> deleteTodo({required Todo todo}) async {
+    bool success = true;
+
+    try {
+      await dio.delete('https://jsonplaceholder.typicode.com/todos/${todo.id}');
+    } catch (e) {
+      success = false;
+    }
+
+    return success;
   }
 }
