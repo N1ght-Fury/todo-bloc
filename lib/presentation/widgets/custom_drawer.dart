@@ -6,6 +6,8 @@ import '../../logic/cubit/user_cubit.dart';
 import '../dialogs/yes_no_dialog.dart';
 
 class CustomDrawer extends StatelessWidget {
+  final BuildContext mainContext;
+  const CustomDrawer(this.mainContext);
   @override
   Widget build(BuildContext context) {
     return BlocListener<UserCubit, UserState>(
@@ -80,7 +82,7 @@ class CustomDrawer extends StatelessWidget {
                                 'Log out',
                               ),
                               onTap: () async {
-                                /* Navigator.pop(context); */
+                                Navigator.pop(context);
                                 var result = await showDialog(
                                   context: context,
                                   builder: (BuildContext context) => YesNoDialog(
@@ -92,7 +94,8 @@ class CustomDrawer extends StatelessWidget {
                                   ),
                                 );
                                 if (result) {
-                                  context.read<UserCubit>().logout();
+                                  mainContext.read<UserCubit>().logout();
+                                  Navigator.pushNamedAndRemoveUntil(mainContext, '/login', (Route<dynamic> route) => false);
                                 }
                               },
                             ),
