@@ -28,3 +28,12 @@ class TodosSuccess extends TodoState {
 
   /* Map<String, dynamic>? toMap() => todos!.toMap(); */
 }
+
+class AddTodoLoading extends TodoState {}
+
+class AddTodoSuccess extends TodoState {
+  final Todo todo;
+  const AddTodoSuccess({required this.todo});
+}
+
+class AddTodoFail extends TodoState {}
