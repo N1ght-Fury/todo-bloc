@@ -21,30 +21,44 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
 
   TextEditingController titleController = TextEditingController();
 
-  void _showWarningDialog(BuildContext context) {
-    showDialog(
+  Future<bool> _showYesNoDialog(BuildContext context) async {
+    var result = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Some changes have been made. Exit without saving?'),
+          title: Text('Are you sure you want to delete this todo?'),
           actionsAlignment: MainAxisAlignment.center,
           actions: <Widget>[
             ElevatedButton(
               child: Text('Yes'),
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context, false);
+                Navigator.pop(context, true);
               },
             ),
             ElevatedButton(
               child: Text('No'),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context, false);
               },
             ),
           ],
         );
       },
+    );
+
+    if (result != null && result) {
+      return result;
+    }
+
+    return false;
+  }
+
+  void showSnackMessag(context, {required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(milliseconds: 3000),
+      ),
     );
   }
 
@@ -68,7 +82,13 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
         actions: [
           widget.todo != null
               ? IconButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var result = await _showYesNoDialog(context);
+
+                    if (result) {
+                      context.read<TodoCubit>().deleteTodo(todo: todo!);
+                    }
+                  },
                   icon: Icon(Icons.delete),
                 )
               : Container(),
@@ -77,19 +97,22 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       body: BlocConsumer<TodoCubit, TodoState>(
         listener: (context, state) {
           if (state is AddTodoFail) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Failed to add todo'),
-                duration: Duration(milliseconds: 3000),
-              ),
-            );
+            showSnackMessag(context, message: 'Failed to add todo');
           } else if (state is AddTodoSuccess) {
+            Navigator.pop(context);
+          } else if (state is UpdateTodoFail) {
+            showSnackMessag(context, message: 'Failed to update todo');
+          } else if (state is UpdateTodoSuccess) {
+            Navigator.pop(context);
+          } else if (state is DeleteTodoFail) {
+            showSnackMessag(context, message: 'Failed to delete todo');
+          } else if (state is DeleteTodoSuccess) {
             Navigator.pop(context);
           }
         },
         builder: (context, state) {
           return LoadingOverlay(
-            isLoading: state is AddTodoLoading,
+            isLoading: state is AddTodoLoading || state is UpdateTodoLoading || state is DeleteTodoLoading,
             opacity: 0.5,
             progressIndicator: const CircularProgressIndicator(),
             child: Padding(
@@ -131,9 +154,13 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      context.read<TodoCubit>().addTodo(todo: todo!);
+                      if (widget.todo != null) {
+                        context.read<TodoCubit>().updateTodo(todo: todo!);
+                      } else {
+                        context.read<TodoCubit>().addTodo(todo: todo!);
+                      }
                     },
-                    child: Text(widget.todo != null ? 'Edit' : 'Add'),
+                    child: Text(widget.todo != null ? 'Update' : 'Add'),
                   ),
                 ],
               ),
