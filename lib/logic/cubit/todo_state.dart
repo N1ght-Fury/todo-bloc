@@ -37,3 +37,21 @@ class AddTodoSuccess extends TodoState {
 }
 
 class AddTodoFail extends TodoState {}
+
+class UpdateTodoLoading extends TodoState {}
+
+class UpdateTodoSuccess extends TodoState {
+  final Todo todo;
+  const UpdateTodoSuccess({required this.todo});
+}
+
+class UpdateTodoFail extends TodoState {}
+
+class DeleteTodoLoading extends TodoState {}
+
+class DeleteTodoSuccess extends TodoState {
+  final int id;
+  const DeleteTodoSuccess({required this.id});
+}
+
+class DeleteTodoFail extends TodoState {}
