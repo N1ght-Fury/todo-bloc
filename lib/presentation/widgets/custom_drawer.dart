@@ -95,6 +95,7 @@ class CustomDrawer extends StatelessWidget {
                                 );
                                 if (result) {
                                   mainContext.read<UserCubit>().logout();
+                                  /* mainContext.read<TodoCubit>().onUserLogOut(); */
                                   Navigator.pushNamedAndRemoveUntil(mainContext, '/login', (Route<dynamic> route) => false);
                                 }
                               },
