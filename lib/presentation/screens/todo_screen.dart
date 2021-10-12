@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import '../../data/model/todo_models.dart';
-import '../widgets/todo_card.dart';
 
-import '../widgets/custom_drawer.dart';
+import '../../data/model/todo_models.dart';
 import '../../logic/cubit/todo_cubit.dart';
-import '../../logic/cubit/user_cubit.dart';
+import '../widgets/custom_drawer.dart';
+import '../widgets/todo_card.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({Key? key}) : super(key: key);
@@ -18,30 +17,42 @@ class TodoScreen extends StatefulWidget {
 class _HomeScreenState extends State<TodoScreen> {
   List<Todo?>? todos = [];
 
+  void showSnackMessag(context, {required String message}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(milliseconds: 3000),
+      ),
+    );
+  }
+
+  /* @override
+  void initState() {
+    super.initState();
+    context.read<TodoCubit>().getTodos();
+  } */
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<TodoCubit, TodoState>(
       listener: (context, state) {
         if (state is TodosFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Failed to get todos'),
-              duration: Duration(milliseconds: 3000),
-            ),
-          );
+          showSnackMessag(context, message: 'Failed to get todos');
+        } else if (state is TodosSuccess) {
+          todos = state.todos;
+        } else if (state is AddTodoSuccess) {
+          showSnackMessag(context, message: 'Successfully created todo!');
+          todos!.add(state.todo);
+        } else if (state is UpdateTodoSuccess) {
+          showSnackMessag(context, message: 'Successfully updated todo!');
+          todos![todos!.indexWhere((todo) => todo!.id == state.todo.id)] = state.todo;
+        } else if (state is DeleteTodoSuccess) {
+          showSnackMessag(context, message: 'Successfully deleted todo!');
+          todos!.removeWhere((todo) => todo!.id == state.id);
         }
       },
       builder: (context, state) {
         TodoState todoState = context.watch<TodoCubit>().state;
-
-        if (todoState is TodosSuccess) {
-          todos = todoState.todos;
-        } else if (todoState is AddTodoSuccess) {
-          todos!.add(todoState.todo);
-        }
-
-        print(todoState);
-        print(todos!.length);
 
         return Scaffold(
           drawer: CustomDrawer(context),
@@ -72,39 +83,3 @@ class _HomeScreenState extends State<TodoScreen> {
     );
   }
 }
-/* 
-BlocConsumer<TodoCubit, TodoState>(
-          listener: (context, state) {
-            if (state is TodosFailed) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Failed to get todos'),
-                  duration: Duration(milliseconds: 3000),
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            TodoState todoState = context.watch<TodoCubit>().state;
-
-            if (todoState is TodosSuccess) {
-              todos = todoState.todos;
-            } else if (todoState is AddTodoSuccess) {
-              todos!.add(todoState.todo);
-            }
-
-            return LoadingOverlay(
-              isLoading: todoState is TodosLoading,
-              opacity: 0.5,
-              progressIndicator: const CircularProgressIndicator(),
-              child: todoState is TodosSuccess
-                  ? ListView.builder(
-                      itemCount: todoState.todos!.length,
-                      itemBuilder: (context, index) => TodoCard(
-                        todo: todos![index]!,
-                      ),
-                    )
-                  : Container(),
-            );
-          },
-        ), */
