@@ -2,10 +2,10 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
-import '../../data/services/api.dart';
 import '../../data/model/todo_models.dart';
-import 'user_cubit.dart';
+import '../../data/services/api.dart';
 
+import 'user_cubit.dart';
 part 'todo_state.dart';
 
 class TodoCubit extends Cubit<TodoState> {
@@ -17,6 +17,10 @@ class TodoCubit extends Cubit<TodoState> {
     getTodos();
   }
 
+  /* void onUserLogOut() {
+    emit(TodoInitial());
+  }
+ */
   Future<void> getTodos() async {
     emit(TodosLoading());
 
@@ -38,6 +42,30 @@ class TodoCubit extends Cubit<TodoState> {
       emit(AddTodoSuccess(todo: createTodoResult.todo!));
     } else {
       emit(AddTodoFail());
+    }
+  }
+
+  Future<void> updateTodo({required Todo todo}) async {
+    emit(UpdateTodoLoading());
+
+    UpdateTodoResult updateTodoResult = await api.updateTodo(todo: todo);
+
+    if (updateTodoResult.success) {
+      emit(UpdateTodoSuccess(todo: updateTodoResult.todo!));
+    } else {
+      emit(UpdateTodoFail());
+    }
+  }
+
+  Future<void> deleteTodo({required Todo todo}) async {
+    emit(DeleteTodoLoading());
+
+    bool success = await api.deleteTodo(todo: todo);
+
+    if (success) {
+      emit(DeleteTodoSuccess(id: todo.id!));
+    } else {
+      emit(DeleteTodoFail());
     }
   }
 }
