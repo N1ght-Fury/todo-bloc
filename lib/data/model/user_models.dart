@@ -1,55 +1,19 @@
-import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/foundation.dart';
 
-class User {
-  int? id;
-  String nameSurname;
-  String email;
+part 'user_models.freezed.dart';
+part 'user_models.g.dart';
 
-  User({
-    this.id,
-    this.nameSurname = '',
-    this.email = '',
-  });
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': nameSurname,
-      'email': email,
-    };
-  }
-
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
-      id: map['id'] ?? 0,
-      nameSurname: map['name'] ?? '',
-      email: map['email'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory User.fromJson(String source) => User.fromMap(json.decode(source));
-
-  @override
-  String toString() => 'User(id: $id, name: $nameSurname, email: $email)';
+@freezed
+class User with _$User {
+  factory User({int? id, String? name, String? email}) = _User;
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }
 
-class SignInUserResult {
-  User? user;
-  bool success;
+@freezed
+class SignInUserResult with _$SignInUserResult {
+  factory SignInUserResult({User? user, required bool success}) = _SignInUserResult;
+  factory SignInUserResult.fromJson(Map<String, dynamic> json) => _$SignInUserResultFromJson(json);
 
-  SignInUserResult({
-    this.user,
-    required this.success,
-  });
-
-  SignInUserResult.fromJson({User? user, required bool success})
-      : user = user,
-        success = success;
-
-  Map<String, dynamic> toJson() => {
-        'user': user,
-        'success': success,
-      };
+  
 }
