@@ -21,6 +21,7 @@ linter:
   # or a specific dart file by using the `// ignore: name_of_lint` and
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
+
   rules:
     avoid_print: false
     avoid_renaming_method_parameters: false
@@ -29,6 +30,12 @@ linter:
     use_key_in_widget_constructors: false
     prefer_initializing_formals: false
     sized_box_for_whitespace: false
+    
+    exclude:
+      - "**/*.g.dart"
+      - "**/*.freezed.dart"
+    errors:
+      invalid_annotation_target: ignore
     # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
 
 # Additional information about this file can be found at
