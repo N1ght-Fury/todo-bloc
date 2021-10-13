@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           /* lazy: false, */
         ),
         BlocProvider<TodoCubit>(
-          create: (context) => TodoCubit(userState: context.read<UserCubit>().state),
+          create: (context) => TodoCubit(userCubit: context.read<UserCubit>()),
           /* lazy: false, */
         ),
       ],
