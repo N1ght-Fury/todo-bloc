@@ -1,4 +1,3 @@
-
 import 'package:dio/dio.dart';
 
 import '../model/todo_models.dart';
@@ -13,12 +12,12 @@ class Api {
 
     try {
       var response = await dio.get('https://jsonplaceholder.typicode.com/users/$id');
-      user = User.fromJson(response.toString());
+      user = User.fromJson(response.data!);
     } catch (e) {
       success = false;
     }
 
-    return SignInUserResult.fromJson(user: user, success: success);
+    return SignInUserResult(user: user, success: success);
   }
 
   Future<GetTodosResult> getUserTodos({required int userId}) async {
@@ -31,7 +30,7 @@ class Api {
       success = false;
     }
 
-    return GetTodosResult.fromJson(json: response!.data!, success: success);
+    return GetTodosResult.fromJson({'todos': response!.data!, 'success': success});
   }
 
   Future<CreateTodoResult> createTodo({required Todo todo}) async {
@@ -39,12 +38,12 @@ class Api {
     Response? response;
 
     try {
-      response = await dio.post('https://jsonplaceholder.typicode.com/todos', data: todo.toMapWithoutId());
+      response = await dio.post('https://jsonplaceholder.typicode.com/todos', data: todo.toJson());
     } catch (e) {
       success = false;
     }
 
-    return CreateTodoResult.fromJson(json: response!.data!, success: success);
+    return CreateTodoResult.fromJson({'todo': response!.data!, 'success': success});
   }
 
   Future<UpdateTodoResult> updateTodo({required Todo todo}) async {
@@ -52,12 +51,12 @@ class Api {
     Response? response;
 
     try {
-      response = await dio.put('https://jsonplaceholder.typicode.com/todos/${todo.id}', data: todo.toMap());
+      response = await dio.put('https://jsonplaceholder.typicode.com/todos/${todo.id}', data: todo.toJson());
     } catch (e) {
       success = false;
     }
 
-    return UpdateTodoResult.fromJson(json: response!.data!, success: success);
+    return UpdateTodoResult.fromJson({'todo': response!.data!, 'success': success});
   }
 
   Future<bool> deleteTodo({required Todo todo}) async {
