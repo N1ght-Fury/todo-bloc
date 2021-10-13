@@ -21,12 +21,13 @@ class UserLoggedIn extends UserState {
   });
 
   factory UserLoggedIn.fromMap(Map<String, dynamic> map) {
+    print(map);
     return UserLoggedIn(
-      loggedInUser: User.fromMap(map),
+      loggedInUser: User.fromJson(map),
     );
   }
 
   factory UserLoggedIn.fromJson(String source) => UserLoggedIn.fromMap(json.decode(source));
 
-  Map<String, dynamic>? toMap() => loggedInUser!.toMap();
+  Map<String, dynamic>? toMap() => loggedInUser!.toJson();
 }
