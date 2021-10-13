@@ -67,7 +67,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     super.initState();
     /* ModalRoute.of(context)!.settings.arguments as Todo */
     if (widget.todo != null) {
-      todo = Todo.fromJson(widget.todo!.toMap());
+      todo = Todo.fromJson(widget.todo!.toJson());
       titleController.text = todo!.title;
     } else {
       todo = Todo(userId: (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.id, title: '', completed: false);
@@ -123,7 +123,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                   TextField(
                     controller: titleController,
                     onChanged: (String value) {
-                      todo!.title = value;
+                      todo = todo!.copyWith(title: value);
                     },
                     decoration: InputDecoration(
                       labelText: 'Title',
@@ -145,7 +145,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                           value: todo!.completed,
                           onChanged: (bool value) {
                             setState(() {
-                              todo!.completed = value;
+                              todo = todo!.copyWith(completed: value);
                             });
                           },
                         ),
