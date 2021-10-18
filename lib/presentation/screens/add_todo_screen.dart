@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
+import 'package:todo_bloc/logic/cubit/add_todo_cubit.dart';
+import 'package:todo_bloc/logic/cubit/delete_todo_cubit.dart';
+import 'package:todo_bloc/logic/cubit/update_todo_cubit.dart';
 import '../../data/model/todo_models.dart';
 import '../../logic/cubit/todo_cubit.dart';
 import '../../logic/cubit/user_cubit.dart';
@@ -17,7 +22,14 @@ class AddTodoScreen extends StatefulWidget {
 }
 
 class _AddTodoScreenState extends State<AddTodoScreen> {
+  bool isLoading = false;
   Todo? todo;
+
+  /* final addTodoCubit = AddTodoCubit(); */
+
+  StreamSubscription? addCubitStream;
+  StreamSubscription? updateCubitStream;
+  StreamSubscription? deleteCubitStream;
 
   TextEditingController titleController = TextEditingController();
 
@@ -72,6 +84,42 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
     } else {
       todo = Todo(userId: (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.id, title: '', completed: false);
     }
+
+    addCubitStream = context.read<AddTodoCubit>().stream.listen((state) {
+      if (state is AddTodoLoading) {
+        setState(() {
+          isLoading = true;
+        });
+      } else if (state is AddTodoFail) {
+        showSnackMessag(context, message: 'Failed to add todo');
+      } else if (state is AddTodoSuccess) {
+        Navigator.pop(context);
+      }
+    });
+
+    updateCubitStream = context.read<UpdateTodoCubit>().stream.listen((state) {
+      if (state is UpdateTodoFail) {
+        showSnackMessag(context, message: 'Failed to update todo');
+      } else if (state is UpdateTodoSuccess) {
+        Navigator.pop(context);
+      }
+    });
+
+    deleteCubitStream = context.read<DeleteTodoCubit>().stream.listen((state) {
+      if (state is UpdateTodoFail) {
+        showSnackMessag(context, message: 'Failed to update todo');
+      } else if (state is UpdateTodoSuccess) {
+        Navigator.pop(context);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    addCubitStream!.cancel();
+    updateCubitStream!.cancel();
+    deleteCubitStream!.cancel();
   }
 
   @override
@@ -86,7 +134,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                     var result = await _showYesNoDialog(context);
 
                     if (result) {
-                      context.read<TodoCubit>().deleteTodo(todo: todo!);
+                      context.read<DeleteTodoCubit>().deleteTodo(todo: todo!);
                     }
                   },
                   icon: Icon(Icons.delete),
@@ -96,15 +144,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
       ),
       body: BlocConsumer<TodoCubit, TodoState>(
         listener: (context, state) {
-          if (state is AddTodoFail) {
-            showSnackMessag(context, message: 'Failed to add todo');
-          } else if (state is AddTodoSuccess) {
-            Navigator.pop(context);
-          } else if (state is UpdateTodoFail) {
-            showSnackMessag(context, message: 'Failed to update todo');
-          } else if (state is UpdateTodoSuccess) {
-            Navigator.pop(context);
-          } else if (state is DeleteTodoFail) {
+          if (state is DeleteTodoFail) {
             showSnackMessag(context, message: 'Failed to delete todo');
           } else if (state is DeleteTodoSuccess) {
             Navigator.pop(context);
@@ -112,7 +152,7 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
         },
         builder: (context, state) {
           return LoadingOverlay(
-            isLoading: state is AddTodoLoading || state is UpdateTodoLoading || state is DeleteTodoLoading,
+            isLoading: isLoading,
             opacity: 0.5,
             progressIndicator: const CircularProgressIndicator(),
             child: Padding(
@@ -155,9 +195,9 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (widget.todo != null) {
-                        context.read<TodoCubit>().updateTodo(todo: todo!);
+                        context.read<UpdateTodoCubit>().updateTodo(todo: todo!);
                       } else {
-                        context.read<TodoCubit>().addTodo(todo: todo!);
+                        context.read<AddTodoCubit>().addTodo(todo: todo!);
                       }
                     },
                     child: Text(widget.todo != null ? 'Update' : 'Add'),
