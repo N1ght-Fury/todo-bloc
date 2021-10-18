@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logger/logger.dart';
+import 'package:todo_bloc/locator.dart';
 
 import '../../data/model/user_models.dart';
 import '../../data/services/api.dart';
@@ -11,9 +12,9 @@ import '../../data/services/api.dart';
 part 'user_state.dart';
 
 class UserCubit extends Cubit<UserState> with HydratedMixin {
-  final Api api;
+  final Api api = getIt<Api>();
 
-  UserCubit({required this.api}) : super(UserInitial()) {
+  UserCubit() : super(UserInitial()) {
     Logger().log(Level.warning, 'CURRENT USER STATE IS $state');
   }
 
@@ -38,9 +39,6 @@ class UserCubit extends Cubit<UserState> with HydratedMixin {
   UserState fromJson(Map<String, dynamic> json) {
     Logger().log(Level.info, 'Inside User Cubit -> fromJson function');
     Logger().log(Level.info, 'Json is: $json');
-
-    // Code below causes infinite loop?
-    /* Logger().log(Level.wtf, 'CURRENT USER STATE: $state'); */
 
     if (json.isEmpty) {
       return UserInitial();
