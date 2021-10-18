@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
-import 'logic/cubit/todo_cubit.dart';
 
+import 'logic/cubit/todo_cubit.dart';
 import 'data/services/api.dart';
 import 'logic/cubit/user_cubit.dart';
 import 'logic/utility/app_bloc_observer.dart';
 import 'presentation/router/app_router.dart';
+
+import 'locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,8 @@ void main() async {
   );
 
   Bloc.observer = AppBlocObserver();
+
+  setup();
 
   Api api = Api();
 
@@ -46,26 +50,28 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<UserCubit>(
-          create: (userCubitContext) => UserCubit(api: api),
+          create: (context) => getIt<UserCubit>(),
           /* lazy: false, */
         ),
         BlocProvider<TodoCubit>(
-          create: (context) => TodoCubit(userCubit: context.read<UserCubit>()),
+          create: (context) => TodoCubit(),
           /* lazy: false, */
         ),
       ],
-      child: Builder(builder: (context) {
-        Logger().log(Level.info, 'Is user logged in: ' + ((context.read<UserCubit>().state is UserLoggedIn) ? 'yes' : 'no'));
-        return MaterialApp(
-          title: 'Todo App',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-          ),
-          initialRoute: context.read<UserCubit>().state is UserLoggedIn ? '/todos' : '/login',
-          onGenerateRoute: appRouter.onGenerateRoute,
-        );
-      }),
+      child: Builder(
+        builder: (context) {
+          Logger().log(Level.info, 'Is user logged in: ' + ((context.read<UserCubit>().state is UserLoggedIn) ? 'yes' : 'no'));
+          return MaterialApp(
+            title: 'Todo App',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
+            initialRoute: context.read<UserCubit>().state is UserLoggedIn ? '/todos' : '/login',
+            onGenerateRoute: appRouter.onGenerateRoute,
+          );
+        },
+      ),
     );
   }
 }
