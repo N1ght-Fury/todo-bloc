@@ -14,6 +14,4 @@ class User with _$User {
 class SignInUserResult with _$SignInUserResult {
   factory SignInUserResult({User? user, required bool success}) = _SignInUserResult;
   factory SignInUserResult.fromJson(Map<String, dynamic> json) => _$SignInUserResultFromJson(json);
-
-  
 }
