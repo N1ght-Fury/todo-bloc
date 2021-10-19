@@ -38,7 +38,9 @@ class _HomeScreenState extends State<TodoScreen> {
     // TODO: when using await getIt<TodoCubit>().getTodos(); to get todos,
     // it doesnt show loading overlay.
     // But when context.read<TodoCubit>().getTodos() used it does?
+    // We dont fetch todos after delete/update
     // TodoState state = getIt<TodoCubit>().state;
+
     TodoState state = context.watch<TodoCubit>().state;
     return Scaffold(
       drawer: CustomDrawer(context),
