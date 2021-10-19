@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:todo_bloc/logic/cubit/add_todo_cubit.dart';
 
+import '../../locator.dart';
 import '../../data/model/todo_models.dart';
 import '../../logic/cubit/todo_cubit.dart';
 import '../widgets/custom_drawer.dart';
@@ -35,22 +35,22 @@ class _HomeScreenState extends State<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: when using await getIt<TodoCubit>().getTodos(); to get todos,
+    // it doesnt show loading overlay.
+    // But when context.read<TodoCubit>().getTodos() used it does?
+    // TodoState state = getIt<TodoCubit>().state;
     TodoState state = context.watch<TodoCubit>().state;
     return Scaffold(
       drawer: CustomDrawer(context),
       appBar: AppBar(
         title: const Text('My Todos'),
         actions: [
-          BlocProvider<AddTodoCubit>(
-            create: (context) => AddTodoCubit(),
-            child: Builder(
-              builder: (context) {
-                return IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () => Navigator.pushNamed(context, '/addTodo'),
-                );
-              },
-            ),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () async {
+              await Navigator.pushNamed(context, '/addTodo');
+              await getIt<TodoCubit>().getTodos();
+            },
           ),
         ],
       ),
