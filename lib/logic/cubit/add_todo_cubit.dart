@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:todo_bloc/data/model/todo_models.dart';
-import 'package:todo_bloc/data/services/api.dart';
-import 'package:todo_bloc/locator.dart';
+
+import '../../data/model/todo_models.dart';
+import '../../data/services/api.dart';
+import '../../locator.dart';
 
 part 'add_todo_state.dart';
 
