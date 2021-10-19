@@ -1,13 +1,12 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logger/logger.dart';
-import 'package:todo_bloc/locator.dart';
 
 import '../../data/model/user_models.dart';
 import '../../data/services/api.dart';
+import '../../locator.dart';
 
 part 'user_state.dart';
 
