@@ -13,13 +13,8 @@ class TodoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => AddTodoScreen(todo: todo),
-          ),
-        );
+      onTap: () async {
+        await Navigator.pushNamed(context, '/addTodo', arguments: todo);
       },
       child: Column(
         children: <Widget>[
