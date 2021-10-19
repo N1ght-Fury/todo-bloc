@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           /* lazy: false, */
         ),
         BlocProvider<TodoCubit>(
-          create: (context) => TodoCubit(),
+          create: (context) => getIt<TodoCubit>(),
           /* lazy: false, */
         ),
       ],
