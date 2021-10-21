@@ -1,17 +1,9 @@
 part of 'add_todo_cubit.dart';
 
-@immutable
-abstract class AddTodoState {
-  const AddTodoState();
+@freezed
+class AddTodoState with _$AddTodoState {
+  const factory AddTodoState.addTodoInitial() = AddTodoInitial;
+  const factory AddTodoState.addTodoLoading() = AddTodoLoading;
+  const factory AddTodoState.addTodoSuccess({required Todo todo}) = AddTodoSuccess;
+  const factory AddTodoState.addTodoFail() = AddTodoFail;
 }
-
-class AddTodoInitial extends AddTodoState {}
-
-class AddTodoLoading extends AddTodoState {}
-
-class AddTodoSuccess extends AddTodoState {
-  final Todo todo;
-  const AddTodoSuccess({required this.todo});
-}
-
-class AddTodoFail extends AddTodoState {}
