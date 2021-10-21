@@ -1,17 +1,9 @@
 part of 'delete_todo_cubit.dart';
 
-@immutable
-abstract class DeleteTodoState {
-  const DeleteTodoState();
+@freezed
+class DeleteTodoState with _$DeleteTodoState {
+  const factory DeleteTodoState.deleteTodoInitial() = DeleteTodoInitial;
+  const factory DeleteTodoState.deleteTodoLoading() = DeleteTodoLoading;
+  const factory DeleteTodoState.deleteTodoSuccess({required int id}) = DeleteTodoSuccess;
+  const factory DeleteTodoState.deleteTodoFail() = DeleteTodoFail;
 }
-
-class DeleteTodoInitial extends DeleteTodoState {}
-
-class DeleteTodoLoading extends DeleteTodoState {}
-
-class DeleteTodoSuccess extends DeleteTodoState {
-  final int id;
-  const DeleteTodoSuccess({required this.id});
-}
-
-class DeleteTodoFail extends DeleteTodoState {}
