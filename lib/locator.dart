@@ -1,13 +1,12 @@
 import 'package:get_it/get_it.dart';
-
-import 'data/services/api.dart';
-import 'logic/cubit/user_cubit.dart';
-import 'logic/cubit/todo_cubit.dart';
+import 'package:injectable/injectable.dart';
+import 'package:todo_bloc/locator.config.dart';
 
 final getIt = GetIt.instance;
 
-void setup() {
-  getIt.registerLazySingleton(() => Api());
-  getIt.registerFactory<UserCubit>(() => UserCubit());
-  getIt.registerFactory<TodoCubit>(() => TodoCubit());
-}
+@InjectableInit(
+  initializerName: r'$initGetIt', // default
+  preferRelativeImports: true, // default
+  asExtension: false, // default
+)
+void configureDependencies() => $initGetIt(getIt);
