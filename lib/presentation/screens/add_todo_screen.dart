@@ -76,12 +76,11 @@ class _AddTodoScreenState extends State<AddTodoScreen> {
   @override
   void initState() {
     super.initState();
-    /* ModalRoute.of(context)!.settings.arguments as Todo */
     if (widget.todo != null) {
       todo = Todo.fromJson(widget.todo!.toJson());
       titleController.text = todo!.title;
     } else {
-      todo = Todo(userId: (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.id, title: '', completed: false);
+      todo = Todo(userId: (context.read<UserCubit>().state as UserLoggedIn).loggedInUser.id, title: '', completed: false);
     }
   }
 
