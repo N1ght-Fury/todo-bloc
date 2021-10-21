@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../logic/cubit/todo_cubit.dart';
 import '../../data/model/todo_models.dart';
-import '../screens/add_todo_screen.dart';
+import '../../locator.dart';
 
 class TodoCard extends StatelessWidget {
   final Todo todo;
@@ -13,8 +14,10 @@ class TodoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        await Navigator.pushNamed(context, '/addTodo', arguments: todo);
+      onTap: () {
+        Navigator.pushNamed(context, '/addTodo', arguments: todo).then((value) {
+          getIt<TodoCubit>().getTodos();
+        });
       },
       child: Column(
         children: <Widget>[
