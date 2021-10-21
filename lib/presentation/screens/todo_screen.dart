@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 
 import '../../locator.dart';
-import '../../data/model/todo_models.dart';
 import '../../logic/cubit/todo_cubit.dart';
 import '../widgets/custom_drawer.dart';
 import '../widgets/todo_card.dart';
@@ -16,8 +15,6 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<TodoScreen> {
-  List<Todo?>? todos = [];
-
   void showSnackMessag(context, {required String message}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -35,12 +32,6 @@ class _HomeScreenState extends State<TodoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: when using await getIt<TodoCubit>().getTodos(); to get todos,
-    // it doesnt show loading overlay.
-    // But when context.read<TodoCubit>().getTodos() used it does?
-    // We dont fetch todos after delete/update
-    // TodoState state = getIt<TodoCubit>().state;
-
     TodoState state = context.watch<TodoCubit>().state;
     return Scaffold(
       drawer: CustomDrawer(context),
@@ -49,9 +40,10 @@ class _HomeScreenState extends State<TodoScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () async {
-              await Navigator.pushNamed(context, '/addTodo');
-              await getIt<TodoCubit>().getTodos();
+            onPressed: () {
+              Navigator.pushNamed(context, '/addTodo').then((value) {
+                getIt<TodoCubit>().getTodos();
+              });
             },
           ),
         ],
