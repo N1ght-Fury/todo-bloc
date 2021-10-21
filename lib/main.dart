@@ -4,13 +4,12 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'logic/cubit/todo_cubit.dart';
 import 'data/services/api.dart';
+import 'locator.dart';
+import 'logic/cubit/todo_cubit.dart';
 import 'logic/cubit/user_cubit.dart';
 import 'logic/utility/app_bloc_observer.dart';
 import 'presentation/router/app_router.dart';
-
-import 'locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +20,7 @@ void main() async {
 
   Bloc.observer = AppBlocObserver();
 
-  setup();
+  configureDependencies();
 
   Api api = Api();
 
