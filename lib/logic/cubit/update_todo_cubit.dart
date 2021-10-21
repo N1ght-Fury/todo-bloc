@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../data/model/todo_models.dart';
 import '../../data/services/api.dart';
 import '../../locator.dart';
 
 part 'update_todo_state.dart';
+part 'update_todo_cubit.freezed.dart';
 
 class UpdateTodoCubit extends Cubit<UpdateTodoState> {
   final Api api = getIt<Api>();

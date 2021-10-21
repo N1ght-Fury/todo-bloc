@@ -1,17 +1,9 @@
 part of 'update_todo_cubit.dart';
 
-@immutable
-abstract class UpdateTodoState {
-  const UpdateTodoState();
+@freezed
+class UpdateTodoState with _$UpdateTodoState {
+  const factory UpdateTodoState.updateTodoInitial() = UpdateTodoInitial;
+  const factory UpdateTodoState.updateTodoLoading() = UpdateTodoLoading;
+  const factory UpdateTodoState.updateTodoSuccess({required Todo todo}) = UpdateTodoSuccess;
+  const factory UpdateTodoState.updateTodoFail() = UpdateTodoFail;
 }
-
-class UpdateTodoInitial extends UpdateTodoState {}
-
-class UpdateTodoLoading extends UpdateTodoState {}
-
-class UpdateTodoSuccess extends UpdateTodoState {
-  final Todo todo;
-  const UpdateTodoSuccess({required this.todo});
-}
-
-class UpdateTodoFail extends UpdateTodoState {}
