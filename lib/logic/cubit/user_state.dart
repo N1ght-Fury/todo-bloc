@@ -1,32 +1,16 @@
 part of 'user_cubit.dart';
 
-@immutable
-abstract class UserState {
-  const UserState();
-}
+@freezed
+class UserState with _$UserState {
+  const UserState._();
+  const factory UserState.initial() = UserInitial;
+  const factory UserState.processing() = UserProcessing;
+  const factory UserState.userFailedToLogin() = UserFailedToLogin;
+  const factory UserState.userLoggedIn({required User loggedInUser}) = UserLoggedIn;
 
-class UserInitial extends UserState {
-  /* Map<String, dynamic>? toMap() => {}; */
-}
+  static UserState fromJson(Map<String, dynamic> json) => UserState.userLoggedIn(
+        loggedInUser: User.fromJson(json),
+      );
 
-class UserProcessing extends UserState {}
-
-class UserFailedToLogin extends UserState {}
-
-class UserLoggedIn extends UserState {
-  final User? loggedInUser;
-
-  const UserLoggedIn({
-    this.loggedInUser,
-  });
-
-  factory UserLoggedIn.fromMap(Map<String, dynamic> map) {
-    return UserLoggedIn(
-      loggedInUser: User.fromJson(map),
-    );
-  }
-
-  factory UserLoggedIn.fromJson(String source) => UserLoggedIn.fromMap(json.decode(source));
-
-  Map<String, dynamic>? toMap() => loggedInUser!.toJson();
+  static Map<String, dynamic>? toMap(UserState state) => (state as UserLoggedIn).loggedInUser.toJson();
 }
