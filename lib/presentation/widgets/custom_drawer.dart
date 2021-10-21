@@ -32,7 +32,7 @@ class CustomDrawer extends StatelessWidget {
             Container(
               color: Colors.transparent,
               child: Text(
-                (context.read<UserCubit>().state as UserLoggedIn).loggedInUser!.name.toString(),
+                (context.read<UserCubit>().state as UserLoggedIn).loggedInUser.name.toString(),
               ),
             ),
             SizedBox(
