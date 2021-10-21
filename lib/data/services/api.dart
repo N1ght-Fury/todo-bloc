@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 
 import '../model/todo_models.dart';
 import '../model/user_models.dart';
 
+@singleton
 class Api {
   var dio = Dio();
 
