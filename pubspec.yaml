@@ -45,6 +45,7 @@ dependencies:
   freezed_annotation: ^0.15.0
   get_it: ^7.2.0
   injectable: ^1.5.0
+  platform: ^3.1.0
 
 dev_dependencies:
   flutter_test:
